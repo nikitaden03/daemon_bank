@@ -1,9 +1,9 @@
 #define CURL_STATICLIB
 #include <iostream>
-#include <curl/curl.h>
-#include <nlohmann/json.hpp>
+#include "Parser/CParser.h"
 
-int main(void) {
+int main() {
+    CParser parser;
+    parser.parse();
     return 0;
-
 }
