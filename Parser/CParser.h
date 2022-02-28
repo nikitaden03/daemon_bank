@@ -13,7 +13,7 @@ private:
     static size_t parse_data(char *ptr, size_t size, size_t nmemb, std::string *data);
 
 public:
-    nlohmann::json parse();
+    std::map<std::string, double> parse();
 };
 
 
