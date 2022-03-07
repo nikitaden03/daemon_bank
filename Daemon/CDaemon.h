@@ -16,6 +16,16 @@ private:
     void update_value(std::map<std::string, double> &data);
 
 public:
+    CDaemon();
+
+    CDaemon(CDaemon &daemon) = delete;
+
+    ~CDaemon() = default;
+
+    void parse();
+
+    CDaemon operator=(CDaemon daemon) = delete;
+
     std::map<std::string, double> get_median();
 
     std::map<std::string, double> get_mean();
