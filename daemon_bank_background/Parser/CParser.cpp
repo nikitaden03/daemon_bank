@@ -5,6 +5,9 @@
 #include "CParser.h"
 
 std::string CParser::make_request() {
+
+    std::cout << "make_request START" << std::endl;
+
     CURL *curl = curl_easy_init();
 
     std::string curlBuffer;
@@ -17,16 +20,19 @@ std::string CParser::make_request() {
 
     curl_easy_cleanup(curl);
 
-    if (result != CURLE_OK) return "";
+    if (result != CURLE_OK) {
+        std::cout << "make_request FINISH ERROR" << std::endl;
+        return "{}";
+    }
+    std::cout << "make_request FINISH OK" << std::endl;
     return curlBuffer;
 }
 
-nlohmann::json CParser::parse() {
+std::map<std::string, double> CParser::parse() {
     std::string answer = make_request();
     nlohmann::json j = nlohmann::json::parse(answer);
-    if (answer.compare("") == 1) j["isSuccessful"] = false;
-    else j["isSuccessful"] = true;
-    return j;
+    if (answer == "{}") return {};
+    else return std::map<std::string, double>(j["rates"]);
 }
 
 size_t CParser::parse_data(char *ptr, size_t size, size_t nmemb, std::string *data) {

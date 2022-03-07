@@ -1,9 +1,9 @@
-#define CURL_STATICLIB
 #include <iostream>
 #include "Parser/CParser.h"
+#include "Daemon/CDaemon.h"
 
 int main() {
-    CParser parser;
-    parser.parse();
+    CDaemon daemon;
+    daemon.parse();
     return 0;
 }
