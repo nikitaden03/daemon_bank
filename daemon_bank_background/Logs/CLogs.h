@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#define LEVEL INFO
+#define LEVEL DEBUG
 
 enum Level {
     DEBUG = 0,

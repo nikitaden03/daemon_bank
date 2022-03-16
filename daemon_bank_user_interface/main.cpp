@@ -1,11 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include "csignal"
 #include "MyPipe/CMyPipe.h"
 
 using namespace std;
 
 int status = 0;
+int flag = 0;
 
 void print_data() {
     ifstream file;
@@ -44,18 +46,35 @@ void my_handler_1([[maybe_unused]] int param) {
 }
 
 void my_handler_2([[maybe_unused]] int param) {
-    status = 1;
+    std::cout << 3 << flag << 3;
+    if (flag) {
+        CMyPipe cmd_pipe = CMyPipe("pidof -s ~/CLionProjects/daemon_bank/daemon_bank_background/cmake-build-debug/daemon_bank_background");
+        if (cmd_pipe.getPID()) {
+            kill(cmd_pipe.getPID(), SIGTERM);
+        } else status = 1;
+    } else status = 1;
 }
 
 void my_handler_3([[maybe_unused]] int param) {
     print_result();
     status = 1;
+    exit(0);
 }
 
-int main() {
+int main(int argc, char * argv[]) {
     signal(SIGCONT, my_handler_1);
     signal(SIGTERM, my_handler_2);
-    signal(SIGSTOP, my_handler_3);
+    signal(SIGINT, my_handler_2);
+    signal(SIGBUS, my_handler_3);
+
+    if (argc >= 3) {
+        fprintf(stderr, "Вы передали слишком много вргументов!");
+        exit(0);
+    }
+
+    if (argc == 2 && (std::strcmp(argv[1], "-c") == 0)) {
+        flag = 1;
+    }
 
     CMyPipe cmd_pipe = CMyPipe("pidof -s ~/CLionProjects/daemon_bank/daemon_bank_background/cmake-build-debug/daemon_bank_background");
 

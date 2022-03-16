@@ -2,7 +2,7 @@
 #include "Parser/CParser.h"
 #include "Daemon/CDaemon.h"
 #include "MyPipe/CMyPipe.h"
-#include "Date/CLogs.h"
+#include "Logs/CLogs.h"
 
 CDaemon *daemon;
 
@@ -13,9 +13,12 @@ void my_handler([[maybe_unused]] int param) {
 
     logs.log(DEBUG, "my_handler OK");
 
+    logs.log(DEBUG, std::to_string(cmd_pipe.getPID()).c_str());
+
     if (cmd_pipe.getPID()) {
+        logs.log(DEBUG, "my_handler send_signal OK");
         daemon->write_measure_central_trend();
-        kill(cmd_pipe.getPID(), SIGSTOP);
+        kill(cmd_pipe.getPID(), SIGBUS);
     }
 
     delete daemon;

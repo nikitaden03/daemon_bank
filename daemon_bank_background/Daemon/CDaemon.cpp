@@ -5,7 +5,7 @@
 
 #include "CDaemon.h"
 #include "../MyPipe/CMyPipe.h"
-#include "../Date/CLogs.h"
+#include "../Logs/CLogs.h"
 
 CDaemon::CDaemon() {
     sum_ = std::map<std::string, double>();
