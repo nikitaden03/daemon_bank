@@ -4,7 +4,8 @@
 #include <fstream>
 
 #include "CDaemon.h"
-#include "../MyPipe/MyPipe.h"
+#include "../MyPipe/CMyPipe.h"
+#include "../Date/CLogs.h"
 
 CDaemon::CDaemon() {
     sum_ = std::map<std::string, double>();
@@ -13,7 +14,8 @@ CDaemon::CDaemon() {
 }
 
 void CDaemon::update_value(std::map<std::string, double> &data) {
-    std::cout << "update_value START" << std::endl;
+    CLogs logs(LEVEL);
+    logs.log(INFO, "update_value START");
     double delta;
     for (auto &i: data) {
         if (sum_.find(i.first) == sum_.end()) {
@@ -28,7 +30,7 @@ void CDaemon::update_value(std::map<std::string, double> &data) {
         else median_[i.first] += delta;
     }
 
-    std::cout << "update_value FINISH " << counts_["USD"] << std::endl;
+    logs.log(INFO, "update_value FINISH");
 }
 
 void CDaemon::parse() {
@@ -46,21 +48,23 @@ void CDaemon::parse() {
 }
 
 void CDaemon::alarm_process() {
-    MyPipe cmd_pipe = MyPipe("pidof -s ~/CLionProjects/daemon_bank/daemon_bank_user_interface/cmake-build-debug/daemon_bank_user_interface");
+    CLogs logs(LEVEL);
+    CMyPipe cmd_pipe = CMyPipe(
+            "pidof -s ~/CLionProjects/daemon_bank/daemon_bank_user_interface/cmake-build-debug/daemon_bank_user_interface");
 
     if (cmd_pipe.getPID()) {
         kill(cmd_pipe.getPID(), SIGCONT);
-        std::cout << "send_signal SUCCESSFUL " << std::endl;
+        logs.log(INFO, "send_signal SUCCESSFUL");
         return;
     }
-    std::cout << "send_signal BAD " << std::endl;
+    logs.log(WARNING, "send_signal BAD");
 }
 
 void CDaemon::share_data(std::map<std::string, double> &data) {
     std::ofstream file;
     file.open("../../data.txt");
 
-    for (auto &i : data) {
+    for (auto &i: data) {
         file << i.first << " " << i.second << " ";
     }
 
@@ -72,12 +76,12 @@ void CDaemon::write_measure_central_trend() {
     std::ofstream file;
     file.open("../../data.txt");
 
-    for (auto &i : median_) {
-        file << i.first << " " << i.second << " ";
+    for (auto &i: sum_) {
+        file << i.first << " " << i.second / counts_[i.first] << " ";
     }
 
-    for (auto &i : median_) {
-        file << i.first << " " << i.second / counts_[i.first] << " ";
+    for (auto &i: median_) {
+        file << i.first << " " << i.second << " ";
     }
 
     file.close();

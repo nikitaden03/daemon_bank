@@ -1,11 +1,13 @@
 #include <curl/curl.h>
-#include <iostream>
 
 #include "CParser.h"
+#include "../Date/CLogs.h"
 
 std::string CParser::make_request() {
 
-    std::cout << "make_request START" << std::endl;
+    CLogs logs(LEVEL);
+
+    logs.log(INFO, "make_request START");
 
     CURL *curl = curl_easy_init();
 
@@ -20,17 +22,21 @@ std::string CParser::make_request() {
     curl_easy_cleanup(curl);
 
     if (result != CURLE_OK) {
-        std::cout << "make_request FINISH ERROR" << std::endl;
+        logs.log(ERROR, "make_request FINISH");
         return "{}";
     }
-    std::cout << "make_request FINISH OK" << std::endl;
+    logs.log(INFO, "make_request FINISH OK");
     return curlBuffer;
 }
 
 std::map<std::string, double> CParser::parse() {
     std::string answer = make_request();
     nlohmann::json j = nlohmann::json::parse(answer);
-    if (answer == "{}") return {};
+    if (answer == "{}") {
+        CLogs logs(LEVEL);
+        logs.log(WARNING, "make_request - answer is empty");
+        return {};
+    }
     else return std::map<std::string, double>(j["rates"]);
 }
 
