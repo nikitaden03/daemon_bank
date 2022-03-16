@@ -5,7 +5,7 @@
 
 #include "CDaemon.h"
 #include "../MyPipe/CMyPipe.h"
-#include "../Date/CLogs.h"
+#include "../Logs/CLogs.h"
 
 CDaemon::CDaemon() {
     sum_ = std::map<std::string, double>();
@@ -61,8 +61,11 @@ void CDaemon::alarm_process() {
 }
 
 void CDaemon::share_data(std::map<std::string, double> &data) {
+
     std::ofstream file;
     file.open("../../data.txt");
+
+    file << CLogs::getDate() << " ";
 
     for (auto &i: data) {
         file << i.first << " " << i.second << " ";
