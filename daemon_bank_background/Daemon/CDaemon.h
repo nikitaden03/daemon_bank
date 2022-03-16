@@ -14,6 +14,8 @@ private:
 
     void update_value(std::map<std::string, double> &data);
 
+    static void share_data(std::map<std::string, double> &data);
+
     static void alarm_process();
 
 public:
@@ -27,9 +29,7 @@ public:
 
     CDaemon operator=(CDaemon daemon) = delete;
 
-    std::map<std::string, double> get_median();
-
-    std::map<std::string, double> get_mean();
+    void write_measure_central_trend();
 };
 
 

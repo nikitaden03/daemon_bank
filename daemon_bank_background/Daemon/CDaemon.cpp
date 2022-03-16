@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <csignal>
+#include <fstream>
 
 #include "CDaemon.h"
 #include "../MyPipe/MyPipe.h"
@@ -27,21 +28,7 @@ void CDaemon::update_value(std::map<std::string, double> &data) {
         else median_[i.first] += delta;
     }
 
-    alarm_process();
-
     std::cout << "update_value FINISH " << counts_["USD"] << std::endl;
-}
-
-std::map<std::string, double> CDaemon::get_median() {
-    return median_;
-}
-
-std::map<std::string, double> CDaemon::get_mean() {
-    std::map<std::string, double> result(sum_);
-    for (auto &i : result) {
-        result[i.first] /= counts_[i.first];
-    }
-    return result;
 }
 
 void CDaemon::parse() {
@@ -49,8 +36,10 @@ void CDaemon::parse() {
     // Will work +- 50 years
     while (i <= 157680000) {
         std::map<std::string, double> answer = parser_.parse();
-        if (!answer.empty())
+        if (!answer.empty()) {
             update_value(answer);
+            share_data(answer);
+        }
         sleep(10);
         i++;
     }
@@ -65,4 +54,31 @@ void CDaemon::alarm_process() {
         return;
     }
     std::cout << "send_signal BAD " << std::endl;
+}
+
+void CDaemon::share_data(std::map<std::string, double> &data) {
+    std::ofstream file;
+    file.open("../../data.txt");
+
+    for (auto &i : data) {
+        file << i.first << " " << i.second << " ";
+    }
+
+    file.close();
+    alarm_process();
+}
+
+void CDaemon::write_measure_central_trend() {
+    std::ofstream file;
+    file.open("../../data.txt");
+
+    for (auto &i : median_) {
+        file << i.first << " " << i.second << " ";
+    }
+
+    for (auto &i : median_) {
+        file << i.first << " " << i.second / counts_[i.first] << " ";
+    }
+
+    file.close();
 }
