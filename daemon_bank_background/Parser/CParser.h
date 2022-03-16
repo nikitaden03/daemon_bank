@@ -6,7 +6,7 @@
 
 class CParser {
 private:
-    std::string link_api = "https://www.cbr-xml-daily.ru/latest.js";
+    std::string link_api_ = "https://www.cbr-xml-daily.ru/latest.js";
 
     std::string make_request();
 

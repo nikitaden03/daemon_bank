@@ -1,5 +1,4 @@
 #include <curl/curl.h>
-
 #include <iostream>
 
 #include "CParser.h"
@@ -12,7 +11,7 @@ std::string CParser::make_request() {
 
     std::string curlBuffer;
 
-    curl_easy_setopt(curl, CURLOPT_URL, link_api.c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, link_api_.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &curlBuffer);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, parse_data);
 
