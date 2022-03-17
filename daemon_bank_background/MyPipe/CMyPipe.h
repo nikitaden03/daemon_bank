@@ -17,6 +17,9 @@ public:
 
     explicit CMyPipe(const std::string &path);
 
+    /**
+     * @return Возвращает pid процесса, имя которого передано в конструктор
+     */
     [[nodiscard]] pid_t getPID() const;
 };
 

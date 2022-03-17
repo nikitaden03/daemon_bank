@@ -9,6 +9,9 @@ using namespace std;
 int status = 0;
 int flag = 0;
 
+/**
+ * @brief Обновляет информацию о валютах, полученную демоном
+ */
 void print_data() {
     ifstream file;
     file.open("../../data.txt");
@@ -24,6 +27,9 @@ void print_data() {
     file.close();
 }
 
+/**
+ * @brief Выводит среднее и медиану валют
+ */
 void print_result() {
     ifstream file;
     file.open("../../data.txt");
@@ -42,10 +48,18 @@ void print_result() {
     file.close();
 }
 
+/**
+ * @brief Обрабатывает сигнал, полученный от демона, указывающий на необходимость обновить дату
+ * @param param
+ */
 void my_handler_1([[maybe_unused]] int param) {
     print_data();
 }
 
+/**
+ * @brief Обрабатывает сигнал, о прекращение работы программы
+ * @param param
+ */
 void my_handler_2([[maybe_unused]] int param) {
     std::cout << 3 << flag << 3;
     if (flag) {
@@ -56,6 +70,10 @@ void my_handler_2([[maybe_unused]] int param) {
     } else status = 1;
 }
 
+/**
+ * @brief Обрабатывает сигнал, полученный от демона, в случае его смерти
+ * @param param
+ */
 void my_handler_3([[maybe_unused]] int param) {
     print_result();
     status = 1;

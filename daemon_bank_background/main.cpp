@@ -6,6 +6,10 @@
 
 CDaemon *daemon;
 
+/**
+ * @brief Обрабатывает сигнал, отключающий программу от процесса
+ * @param param
+ */
 void my_handler([[maybe_unused]] int param) {
     CLogs logs(LEVEL);
 
