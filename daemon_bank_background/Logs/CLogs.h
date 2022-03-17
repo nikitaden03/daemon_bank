@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#define LEVEL INFO
+#define LEVEL DEBUG
 
 enum Level {
     DEBUG = 0,
@@ -14,16 +14,20 @@ enum Level {
 };
 
 class CLogs {
-    static std::string getDate();
-
     std::vector<std::string> print_information{"DEBUG", "INFO", "WARNING", "ERROR"};
 public:
 
     explicit CLogs(Level level);
 
+    CLogs(CLogs& logs) = delete;
+
     Level level_;
 
     void log(Level level, const char *message) const;
+
+    CLogs &operator=(CLogs logs) = delete;
+
+    static std::string getDate();
 };
 
 

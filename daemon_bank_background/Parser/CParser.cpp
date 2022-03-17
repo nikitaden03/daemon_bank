@@ -1,7 +1,7 @@
 #include <curl/curl.h>
 
 #include "CParser.h"
-#include "../Date/CLogs.h"
+#include "../Logs/CLogs.h"
 
 std::string CParser::make_request() {
 
